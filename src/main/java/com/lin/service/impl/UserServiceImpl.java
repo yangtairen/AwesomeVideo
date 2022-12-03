@@ -82,7 +82,7 @@ public class UserServiceImpl implements UserService {
     // 如果没有该事务，以非事务运行
     @Transactional(propagation = Propagation.SUPPORTS)
     @Override
-    @Cacheable(key = "targetClass + methodName + #p0 + #p1")
+//    @Cacheable(key = "targetClass + methodName + #p0 + #p1")
     public User queryUserForLogin(String username, String password) {
         // 创建用户查询实例
         Example userExample = new Example(User.class);
@@ -94,7 +94,8 @@ public class UserServiceImpl implements UserService {
         criteria.andEqualTo("password", password);
 
         // 根据查询实例进行查询用户
-        return userMapper.selectOneByExample(userExample);
+        User user = userMapper.selectOneByExample(userExample);
+        return user;
     }
 
     // 运行当前事务，如果当前没有事务，就新建一个事务
@@ -129,7 +130,8 @@ public class UserServiceImpl implements UserService {
         criteria.andEqualTo("id", userId);
 
         // 根据查询实例进行查询用户
-        return userMapper.selectOneByExample(userExample);
+        User user = userMapper.selectOneByExample(userExample);
+        return user;
     }
 
     // 如果没有该事务，以非事务运行

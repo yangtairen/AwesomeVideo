@@ -15,6 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,6 +47,12 @@ public class VideoController extends BaseController {
     @Autowired
     private VideoService videoService;
 
+    @Value("${user.upload.file.path}")
+    private String uploadFilepath;
+
+    @Value("${ffmpeg.exe.path}")
+    private String ffmpegExePath;
+
     @ApiOperation(value = "上传视频", notes = "上传视频的接口")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userId", value = "用户id", required = true, dataType = "String", paramType = "form"),
@@ -76,7 +83,7 @@ public class VideoController extends BaseController {
                 String fileName = file.getOriginalFilename();
                 if (StringUtils.isNoneBlank(fileName)) {
                     // 文件上传的最终保存路径
-                    finalVideoPath = String.format("F:/AwesomeVideoUpload/%s/video/%s", userId, fileName);
+                    finalVideoPath = String.format("%s/%s/video/%s", uploadFilepath, userId, fileName);
                     // 设置数据库保存的路径
                     uploadPathDB = String.format("/%s/video/%s", userId, fileName);
 
@@ -105,20 +112,20 @@ public class VideoController extends BaseController {
         }
 
         // 合并视频和背景乐的工具
-        FFmpegUtils ffmpegUtils = new FFmpegUtils(FFMPEG_EXE);
+        FFmpegUtils ffmpegUtils = new FFmpegUtils(ffmpegExePath);
 
         // 判断bgmId是否为空，如果不为空，
         // 就查询bgm的信息，并且合并视频，生成新的视频
         if (StringUtils.isNotBlank(bgmId)) {
             Bgm bgm = bgmService.queryBgmById(bgmId);
-            String mp3InputPath = FILE_BASE + bgm.getPath();
+            String mp3InputPath = uploadFilepath + bgm.getPath();
             String videoInputPath = finalVideoPath;
 
             String videoOutputName = UUID.randomUUID().toString() + ".mp4";
 
             // 设置数据库保存的路径
             uploadPathDB = String.format("/%s/video/%s", userId, videoOutputName);
-            finalVideoPath = FILE_BASE + uploadPathDB;
+            finalVideoPath = uploadFilepath + uploadPathDB;
             // 合并视频和背景音乐
             ffmpegUtils.mergeVideoAndBackgroundMusic(videoInputPath, mp3InputPath, videoSeconds, finalVideoPath);
         }

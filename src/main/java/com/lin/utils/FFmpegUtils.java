@@ -110,11 +110,11 @@ public class FFmpegUtils {
     }
 
     public static void main(String[] args) throws IOException {
-        FFmpegUtils ffmpeg = new FFmpegUtils("H:/ffmpeg/bin/ffmpeg.exe");
-        ffmpeg.mergeVideoAndBackgroundMusic("F:/AwesomeVideoUpload/180930DRXM99CKKP/video/video.mp4",
-                "F:/AwesomeVideoUpload/180930DRXM99CKKP/video/愉快.mp3",
+        FFmpegUtils ffmpeg = new FFmpegUtils("D:/Program Files/ffmpeg/bin/ffmpeg.exe");
+        ffmpeg.mergeVideoAndBackgroundMusic("F:/AwesomeVideoUpload/video.mp4",
+                "F:/AwesomeVideoUpload/music.mp3",
                 10,
-                "F:/AwesomeVideoUpload/180930DRXM99CKKP/video/movie.avi");
+                "F:/AwesomeVideoUpload/output.avi");
     }
 
 }

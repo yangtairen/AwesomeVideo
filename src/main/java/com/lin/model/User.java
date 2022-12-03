@@ -7,6 +7,9 @@ import lombok.Data;
 import javax.persistence.*;
 import java.io.Serializable;
 
+/**
+ * @author talent
+ */
 @Data
 @ApiModel(value = "用户对象", description = "这是用户对象")
 @Table(name = "users")

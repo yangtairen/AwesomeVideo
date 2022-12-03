@@ -45,7 +45,10 @@ public class RegisterLoginController extends BaseController {
         // 3.保存用户，注册信息
         if (!isExist) {
             user.setUsername(user.getUsername());
-            user.setNickname(user.getNickname());
+            if(StringUtils.isBlank(user.getNickname())){
+                user.setNickname(user.getUsername());
+            }
+
             // 密码进行MD5加密
             user.setPassword(MD5Utils.getMD5Str(user.getPassword()));
             user.setFansCounts(0);

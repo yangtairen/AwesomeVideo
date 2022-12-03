@@ -11,6 +11,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,6 +36,9 @@ public class UserController extends BaseController {
     @Autowired
     private UserService userService;
 
+    @Value("${user.upload.file.path}")
+    private String uploadFilepath;
+
     @ApiOperation(value = "用户上传头像", notes = "用户上传头像的接口")
     @ApiImplicitParam(name = "userId", value = "用户id", required = true, dataType = "String", paramType = "query")
     @PostMapping(value = "/uploadFace", headers="content-type=multipart/form-data")
@@ -54,7 +58,7 @@ public class UserController extends BaseController {
                 String fileName = file.getOriginalFilename();
                 if (StringUtils.isNoneBlank(fileName)) {
                     // 文件上传的最终保存路径
-                    String finalFacePath = String.format("F:/AwesomeVideoUpload/%s/face/%s", userId, fileName);
+                    String finalFacePath = String.format("%s/%s/face/%s", uploadFilepath, userId, fileName);
                     // 设置数据库保存的路径
                     uploadPathDB = String.format("/%s/face/%s", userId, fileName);
 
